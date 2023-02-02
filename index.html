@@ -1,7 +1,81 @@
 <!DOCTYPE html>
-<html>
-<body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" href="#">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>:3</title>
+</head>
+<body class="body">
+    <div class="input-container">
+        <input type="search", id='userInput1', placeholder="Last.fm username">
+        <button type="button" id="testbtn">tewst</button>
+        <button id='stopBtn'>Stop</button>
+        <br>
+        <input type="checkbox", id="artist">Artist</input>
+        <input type="checkbox", id="album">Album</input>
+        <input type="checkbox", id="genre">Genre</input>
+        <br>
+        <input type="checkbox", id="deezer">Deezer</input>
+    </div>
+    <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+                <th><button id="rank", class="sorter">Rank</button></th>
+                <th><button id="Track", class="sorter">Track</button></th>
+                <th><button id="playtime", class="sorter">Playtime</button></th>
+                <th><button id="length", class="sorter">Length</button></th>
+                <th><button id="length", class="sorter">%</button></th>
+            </tr>
+            <tr>
+                <th><button id="bumper", class="bumper"></button></th>
+                <th><button id="bumper", class="bumper"></button></th>
+                <th><button id="bumper", class="bumper"></button></th>
+                <th><button id="bumper", class="bumper"></button></th>
+                <th><button id="bumper", class="bumper"></button></th>
+            </tr>
+          </thead>
+          <tbody id="table-content"></tbody>
+        </table>
+      </div>
+    <div class="form", id="form">
+    <div id='content'  style="white-space: pre-line">
+        <table id='books' cellpadding='10px' style="text-align:center">
+            <thead>
+                <tr>
+                    <th>Time Listened</th>
+                    <th>Track Number</th>
+                    <th>Errors</th>
+                    <th>Error List</th>
+                    <th>Runtime</th>
+                </tr>
+                <tr>
+                    <td id="timeListened"></td>
+                    <td id="trackNumber"></td>
+                    <td id="errors"></td>
+                    <td>
+                        <button id="showBtn">Show</button>
+                    </td>
+                    <td id="runtime"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <td id="errorList"></td>
+                    </td>
+                </tr>                   
+            </thead>
+        </table>
+    </div>
+    </br>
+<link rel= stylesheet href= style.css>
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript", src='src/table.js'></script>
+<script type="text/javascript", src='src/secret.js'></script>
+<script type="text/javascript", src='src/print.js'></script>
+<script type="text/javascript", src='src/index.js'></script>
+<script type="text/javascript", src='src/anal.js'></script>
+<script type="text/javascript", src='src/listeners.js'></script>
 </body>
 </html>
