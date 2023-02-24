@@ -1,26 +1,25 @@
 html, body {
-    font-family: 'Trebuchet MS';
-    height: 100%;
-  }  
+  font-family: 'Trebuchet MS';
+  height: 100%;
+}  
 
 .form {
-    border-color: green;
-    margin: auto;
-    width: 33%;
-    height:100%;
-    position: relative;
+  border-color: green;
+  margin: auto;
+  width: 33%;
+  height:100%;
+  position: relative;
 } 
 
 ::placeholder {
-    color: azure;
-    opacity: 1;
+  color: azure;
+  opacity: 1;
 }
 
 .input-container{
-  margin-left: auto;
-  margin-right: 0;
-  float:left;
-  max-width:20%;
+margin-left: auto;
+margin-right: 0;
+min-width:100%;
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
@@ -30,98 +29,55 @@ body {
 }
 
 .table-container {
-  margin-left: auto;
+  margin-left: 0;
   margin-right: 0;
-  max-width:80%;
-  min-height: 50vh;
-  max-height: 75vh;
+  min-width:100%;
   overflow: scroll;
-  width: 100%;
-  float:right;
   scroll-behavior:smooth;
 }
 
-.bumper{
-  position:unset
+* {
+  font-family: sans-serif;
 }
 
-.sorter{
-  position: fixed;
-  max-height: 3vh;
-  vertical-align: top;
-}
-
-table {
+.content-table {
   border-collapse: collapse;
-  width: 100%;
+  margin: 25px 0;
+  font-size: 0.9em;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
-thead tr {
-  border-bottom: 1px solid #ddd;
-  border-top: 1px solid #ddd;
-  height: 1px;
-}
-
-th {
-  font-weight: bold;
-  height: inherit;
-  padding: 0;
-}
-
-th:not(:first-of-type) {
-  border-left: 1px solid #ddd;
-}
-
-th button {
-  background-color: #eee;
-  border: none;
+.first-row {
+  user-select: none;
   cursor: pointer;
-  display: block;
-  font: inherit;
-  height: 100%;
-  margin: 0;
-  min-width: max-content;
-  padding: 0.5rem 1rem;
-  position: relative;
+}
+.content-table thead tr {
+  background-color: #F71414;
+  color: #ffffff;
   text-align: left;
-  width: 100%;
+  font-weight: bold;
+  min-width: 100%;
 }
 
-th button::after {
-  position: absolute;
-  right: 0.5rem;
+.content-table th,
+.content-table td {
+  padding: 12px 15px;
 }
 
-th button[data-dir="asc"]::after {
-  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpolygon points='0, 0 8,0 4,8 8' fill='%23818688'/%3E%3C/svg%3E");
+.content-table tbody tr {
+  border-bottom: 1px solid #dddddd;
 }
 
-th button[data-dir="desc"]::after {
-  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpolygon points='4 0,8 8,0 8' fill='%23818688'/%3E%3C/svg%3E");
+.content-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
 }
 
-tbody tr {
-  border-bottom: 1px solid #ddd;
+.content-table tbody tr:last-of-type {
+  border-bottom: 2px solid #F71414;
 }
 
-td {
-  padding: 0.5rem 1rem;
-  text-align: left;
+.content-table tbody tr.active-row {
+  color: #F71414;
 }
-
-footer {
-  background-color: #ffdfb9;
-  margin: 2rem -8px -8px;
-  padding: 1rem;
-  text-align: center;
-}
-
-footer a {
-  color: inherit;
-  text-decoration: none;
-}
-
-footer .heart {
-  color: #dc143c;
-}
-

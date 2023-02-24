@@ -11,6 +11,7 @@
     <div class="input-container">
         <input type="search", id='userInput1', placeholder="Last.fm username">
         <button type="button" id="testbtn">tewst</button>
+        <button type="button" id="btn">teeewst</button>
         <button id='stopBtn'>Stop</button>
         <br>
         <input type="checkbox", id="artist">Artist</input>
@@ -20,27 +21,51 @@
         <input type="checkbox", id="deezer">Deezer</input>
     </div>
     <div class="table-container">
-        <table class="data-table">
-          <thead>
-            <tr>
-                <th><button id="rank", class="sorter">Rank</button></th>
-                <th><button id="Track", class="sorter">Track</button></th>
-                <th><button id="playtime", class="sorter">Playtime</button></th>
-                <th><button id="length", class="sorter">Length</button></th>
-                <th><button id="length", class="sorter">%</button></th>
-            </tr>
-            <tr>
-                <th><button id="bumper", class="bumper"></button></th>
-                <th><button id="bumper", class="bumper"></button></th>
-                <th><button id="bumper", class="bumper"></button></th>
-                <th><button id="bumper", class="bumper"></button></th>
-                <th><button id="bumper", class="bumper"></button></th>
-            </tr>
-          </thead>
-          <tbody id="table-content"></tbody>
-        </table>
-      </div>
+        <table class="content-table", id="content-table">
+            <thead>
+              <tr class="first-row">
+                <th>Rank</th>
+                <th>Song</th>
+                <th>Artist</th>
+                <th>Time Listened</th>
+                <th>Length</th>
+                <th>Scrobbles</th>
+                <th>LastFM Rank</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Glue Song</td>
+                <td>beabadoobee</td>
+                <td>19:10</td>
+                <td>4:25</td>
+                <td>4</td>
+                <td>2</td>
+              </tr>
+              <tr class="active-row", id="test">
+                <td>2</td>
+                <td>A Minute Or 2</td>
+                <td>User-177606669</td>
+                <td>14:33</td>
+                <td>2:06</td>
+                <td>7</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Count of Three (You Can Eat S@#t)</td>
+                <td>underscores</td>
+                <td>10:15</td>
+                <td>3:13</td>
+                <td>3</td>
+                <td>3</td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
     <div class="form", id="form">
+</body>
     <div id='content'  style="white-space: pre-line">
         <table id='books' cellpadding='10px' style="text-align:center">
             <thead>
@@ -68,7 +93,7 @@
             </thead>
         </table>
     </div>
-    </br>
+
 <link rel= stylesheet href= style.css>
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript", src='src/table.js'></script>

@@ -141,7 +141,6 @@ function onStop() {
 
 
 /*old code graveyard; inside the mind
-
 function reset(){
     stopAsked = false;
     error = false;
@@ -156,7 +155,6 @@ function reset(){
     indice = 0
     deezerOn = true;
 }
-
 function onTrack() {
     for(var key in listing){
         playList.push(key)
@@ -165,7 +163,6 @@ function onTrack() {
         console.log((`${i}: ${listing[playList[i]]} - ${anal(playList[i])} seconds`))
     }
 }
-
 function onArtist() {
     let vari = {};
     onStop()

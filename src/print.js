@@ -40,6 +40,6 @@ function sortTracks(trackMapUns){
         trackMap.set(track, [arr[0], arr[1], i])
     });
     trackMap.forEach((arr, track)=>{
-        addTrack(arr[2], track, anal(arr[1]), anal(arr[0]), null)
+        addTrack(arr[2], track, anal(arr[1]), anal(arr[0]))
     });
 }
