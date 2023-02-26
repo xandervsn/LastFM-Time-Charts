@@ -1,4 +1,5 @@
-function print(playList, listing, albumMap, genreMap){
+function print(albumMap, genreMap){
+    /*
     const artistMap = new Map();
     let artistName;
     for(var key in listing){
@@ -19,27 +20,28 @@ function print(playList, listing, albumMap, genreMap){
     }
     const artistsSorted = new Map([...artistMap.entries()].sort((a, b) => b[1] - a[1]));
     artistsSorted.forEach((time, artists)=>{
-        //console.log(`${artists}: ${anal(time)}`)
+        console.log(`${artists}: ${anal(time)}`)
     });
+    */
     const albumsSorted = new Map([...albumMap.entries()].sort((a, b) => b[1] - a[1]));
     albumsSorted.forEach((time, artists)=>{
-        //console.log(`ALBUM ${artists}: ${anal(time)}`)
+        console.log(`ALBUM ${artists}: ${anal(time)}`)
     });
     const genresSorted = new Map([...genreMap.entries()].sort((a, b) => b[1] - a[1]));
     genresSorted.forEach((time, artists)=>{
-        //console.log(`GENRE ${artists}: ${anal(time)}`)
+        console.log(`GENRE ${artists}: ${anal(time)}`)
     });
 }
 
 function sortTracks(trackMapUns){
-    const trackMap = new Map([...trackMapUns.entries()].sort((a, b) => b[1][1] - a[1][1]));
+    const trackMap = new Map([...trackMapUns.entries()].sort((a, b) => b[1][3] - a[1][3]));
     trackMapUns.clear()
     let i = 0;
     trackMap.forEach((arr, track)=>{
         i++;
-        trackMap.set(track, [arr[0], arr[1], i])
+        trackMap.set(track, [parseInt(i), arr[1], arr[2], anal(arr[3]), anal(arr[4]), arr[5], arr[6], arr[7]])
     });
     trackMap.forEach((arr, track)=>{
-        addTrack(arr[2], track, anal(arr[1]), anal(arr[0]))
+        addTrack(trackMap.get(track))
     });
 }

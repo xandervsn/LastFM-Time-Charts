@@ -1,48 +1,44 @@
-function getLength(){
-  return 0;
+function addTrack(trackmap){
+	let newRow = table.insertRow(-1);
+    for (let i = 0; i < 8; i++) {
+        newCell = newRow.insertCell(i);
+		let newText = document.createTextNode(trackmap[i]);
+		newCell.appendChild(newText);
+    }
+	filler.remove()
+	highlight();
 }
 
-function addTrack(rank, track, playtime, length, percentage){
-  response.tbldata.push({
-      "rank": rank,
-      "track": track,
-      "playtime": playtime,
-      "length": length,
-      "percentage": percentage,
-  });
+function highlight(){
+	let tableRows = document.getElementsByTagName('tr');
+	for (let i = 1; i < tableRows.length; i++) {
+		tableRows[i].onmouseover = function(){
+			tableRows[i].className = 'active-row'
+		}; 
+		tableRows[i].onmouseleave = function(){
+			tableRows[i].className = ''
+		}; 
+	}
 }
 
-const response = {
-  "tbldata": [
-     {
-        "rank": null,
-        "track": null,
-        "playtime": null,
-        "length": null,
-        "percentage": null,
-     },
-  ]
+const firstrow = document.getElementsByTagName('th');
+for (let i = 0; i < firstrow.length; i++) {
+	firstrow[i].onmouseover = function(){
+		if(firstrow[i].className.split(' ')[0] != 'on-head'){
+			firstrow[i].className = 'active-head'
+		}
+	}; 
+	firstrow[i].onmouseleave = function(){
+		if(firstrow[i].className.split(' ')[0] != 'on-head'){
+			firstrow[i].className = ''
+		}
+	}; 
 }
 
-let tableRows = document.getElementsByTagName('tr');
+function sortTableByColumn(table, column, asc = false) {
+	try{document.getElementsByClassName('on-head')[0].className = ''}catch{}
+	firstrow[column].className = 'on-head'
 
-for (let i = 1; i < tableRows.length; i++) {
-  tableRows[i].addEventListener('mouseover', function(e){
-    tableRows[i].className = 'active-row'
-  }); 
-  tableRows[i].addEventListener('mouseleave', function(e){
-    tableRows[i].className = ''
-  }); 
-}
-
-/**
- * Sorts a HTML table.
- *
- * @param {HTMLTableElement} table The table to sort
- * @param {number} column The index of the column to sort
- * @param {boolean} asc Determines if the sorting will be in ascending
- */
-function sortTableByColumn(table, column, asc = true) {
 	const dirModifier = asc ? 1 : -1;
 	const tBody = table.tBodies[0];
 	const rows = Array.from(tBody.querySelectorAll("tr"));
@@ -67,14 +63,20 @@ function sortTableByColumn(table, column, asc = true) {
 	table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
 	table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-asc", asc);
 	table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-desc", !asc);
+	highlight();
 }
 
 document.querySelectorAll(".content-table th").forEach(headerCell => {
 	headerCell.addEventListener("click", () => {
 		const tableElement = headerCell.parentElement.parentElement.parentElement;
-		const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
+		let headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
+		if(headerIndex == 0){
+			headerIndex = 3
+		}
+		if(headerIndex == 6){
+			headerIndex = 5
+		}
 		const currentIsAscending = headerCell.classList.contains("th-sort-asc");
-
-		sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
+		sortTableByColumn(tableElement, headerIndex, currentIsAscending);
 	});
 });

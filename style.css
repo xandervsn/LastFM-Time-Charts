@@ -1,64 +1,56 @@
-html, body {
-  font-family: 'Trebuchet MS';
-  height: 100%;
-}  
-
-.form {
-  border-color: green;
-  margin: auto;
-  width: 33%;
-  height:100%;
-  position: relative;
-} 
-
-::placeholder {
-  color: azure;
-  opacity: 1;
+.input{
+  width: 60%;
+  display:flex;
+  border-bottom: 2px solid #dddddd;
+  margin:auto;
 }
 
-.input-container{
-margin-left: auto;
-margin-right: 0;
-min-width:100%;
+.input-section {
+  padding: 1rem 1rem;
+  display: flex;
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
 
 body {
+  margin:0;
+  padding:0;
   font-family: "Lato", sans-serif;
 }
 
 .table-container {
-  margin-left: 0;
-  margin-right: 0;
-  min-width:100%;
-  overflow: scroll;
-  scroll-behavior:smooth;
+  margin: auto;
+  width: 60%;
 }
 
 * {
   font-family: sans-serif;
 }
 
+.errors{
+  float:right;
+  width:40%
+}
+
 .content-table {
+  width:60%;
+  float:left;
   border-collapse: collapse;
   margin: 25px 0;
   font-size: 0.9em;
   border-radius: 5px 5px 0 0;
-  overflow: hidden;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden; 
 }
 
 .first-row {
   user-select: none;
   cursor: pointer;
 }
+
 .content-table thead tr {
-  background-color: #F71414;
-  color: #ffffff;
+  border-bottom: 2px solid #f3f3f3;
   text-align: left;
   font-weight: bold;
-  min-width: 100%;
 }
 
 .content-table th,
@@ -67,7 +59,7 @@ body {
 }
 
 .content-table tbody tr {
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 2px solid #dddddd;
 }
 
 .content-table tbody tr:nth-of-type(even) {
@@ -75,9 +67,14 @@ body {
 }
 
 .content-table tbody tr:last-of-type {
-  border-bottom: 2px solid #F71414;
+  border-bottom: 2px solid #B90000;
 }
 
 .content-table tbody tr.active-row {
-  color: #F71414;
+  color: #B90000;
+}
+
+.active-head, .on-head{
+  color:#B90000;
+  border-bottom: 2px solid #B90000;
 }

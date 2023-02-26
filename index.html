@@ -8,33 +8,43 @@
     <title>:3</title>
 </head>
 <body class="body">
-    <div class="input-container">
-        <input type="search", id='userInput1', placeholder="Last.fm username">
-        <button type="button" id="testbtn">tewst</button>
-        <button type="button" id="btn">teeewst</button>
-        <button id='stopBtn'>Stop</button>
-        <br>
-        <input type="checkbox", id="artist">Artist</input>
-        <input type="checkbox", id="album">Album</input>
-        <input type="checkbox", id="genre">Genre</input>
-        <br>
-        <input type="checkbox", id="deezer">Deezer</input>
+    <div class="input">
+        <div class="input-section">
+            <input type="search", id='userInput1', placeholder="Last.fm username">
+            <button type="button" id="testbtn">Start</button>
+            <select name ='range' id="range">
+                <option value="7day">Week</option>
+                <option value="1month">Month</option>
+                <option value="3month">3 Month</option>
+                <option value="6month">6 Month</option>
+                <option value="12month">Year</option>
+                <option value="overall">Overall</option>
+            </select>
+            <button id='stopBtn'>Stop</button>
+        </div>
+        <div class="input-section">
+            <input type="checkbox", id="artist">Artist</input>
+            <input type="checkbox", id="album">Album</input>
+            <input type="checkbox", id="genre">Genre</input>
+            <input type="checkbox", id="deezer">Deezer</input>
+        </div>
     </div>
     <div class="table-container">
         <table class="content-table", id="content-table">
             <thead>
-              <tr class="first-row">
+              <tr class="first-row", id="first-row">
                 <th>Rank</th>
-                <th>Song</th>
+                <th>Track</th>
                 <th>Artist</th>
-                <th>Time Listened</th>
+                <th>Playtime</th>
                 <th>Length</th>
                 <th>Scrobbles</th>
-                <th>LastFM Rank</th>
+                <th>RankFM</th>
+                <th>Percent</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr id="filler">
                 <td>1</td>
                 <td>Glue Song</td>
                 <td>beabadoobee</td>
@@ -42,57 +52,40 @@
                 <td>4:25</td>
                 <td>4</td>
                 <td>2</td>
-              </tr>
-              <tr class="active-row", id="test">
-                <td>2</td>
-                <td>A Minute Or 2</td>
-                <td>User-177606669</td>
-                <td>14:33</td>
-                <td>2:06</td>
-                <td>7</td>
-                <td>1</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Count of Three (You Can Eat S@#t)</td>
-                <td>underscores</td>
-                <td>10:15</td>
-                <td>3:13</td>
-                <td>3</td>
-                <td>3</td>
+                <td>14%</td>
               </tr>
             </tbody>
           </table>
+          <div id='content'  class='errors'>
+            <table id='books' cellpadding='10px' style="text-align:center">
+                <thead>
+                    <tr>
+                        <th>Time Listened</th>
+                        <th>Track Number</th>
+                        <th>Errors</th>
+                        <th>Error List</th>
+                        <th>Runtime</th>
+                    </tr>
+                    <tr>
+                        <td id="timeListened"></td>
+                        <td id="trackNumber"></td>
+                        <td id="errors"></td>
+                        <td>
+                            <button id="showBtn">Show</button>
+                        </td>
+                        <td id="runtime"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <td id="errorList"></td>
+                        </td>
+                    </tr>                   
+                </thead>
+            </table>
+        </div>
     </div>
     <div class="form", id="form">
 </body>
-    <div id='content'  style="white-space: pre-line">
-        <table id='books' cellpadding='10px' style="text-align:center">
-            <thead>
-                <tr>
-                    <th>Time Listened</th>
-                    <th>Track Number</th>
-                    <th>Errors</th>
-                    <th>Error List</th>
-                    <th>Runtime</th>
-                </tr>
-                <tr>
-                    <td id="timeListened"></td>
-                    <td id="trackNumber"></td>
-                    <td id="errors"></td>
-                    <td>
-                        <button id="showBtn">Show</button>
-                    </td>
-                    <td id="runtime"></td>
-                </tr>
-                <tr>
-                    <td>
-                        <td id="errorList"></td>
-                    </td>
-                </tr>                   
-            </thead>
-        </table>
-    </div>
 
 <link rel= stylesheet href= style.css>
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

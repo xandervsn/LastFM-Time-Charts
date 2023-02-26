@@ -16,3 +16,27 @@ function anal(total){
     }
     return `${analog}`
 }
+
+//overall | 7day | 1month | 3month | 6month | 12month 
+function perchance(period, playtime, base){
+    let time = 0;
+
+    if(period == "period=overall&"){
+        time = 10;
+    }else if(period == "period=7day&"){
+        time = 7*24*60*60
+    }else if(period == "period=1month&"){
+        time = 30*24*60*60
+    }else if(period == "period=3month&"){
+        time = 90*24*60*60
+    }else if(period == "period=6month&"){
+        time = 182*24*60*60
+    }else if(period == "period=12month&"){
+        time = 365*24*60*60
+    }
+    if(Math.round(base*100*(playtime/time))/base == 0){
+        perchance(period, playtime, base*10)
+    }else{
+        return `${Math.round(base*100*(playtime/time))/base}%`
+    }
+}

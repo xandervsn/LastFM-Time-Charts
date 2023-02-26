@@ -21,7 +21,7 @@ async function scrape(user, artistOn, albumOn, genreOn, deezerOn){
         apiKey: "api_key=" + getLastKey().toString(),
         limit: "limit=200&",
         //overall | 7day | 1month | 3month | 6month | 12month 
-        period: "period=7day&",
+        period: "period=overall&",
         getTopTracks: "method=user.gettoptracks&",
         getInfo: "method=track.getInfo&",
         artist: "artist=&",
@@ -43,10 +43,14 @@ async function scrape(user, artistOn, albumOn, genreOn, deezerOn){
     for (let i = 0; i < pages; i++) {
         let page = `page=${i + 1}&`
         let url = optionsLast.api + user + page + optionsLast.period + optionsLast.getTopTracks + optionsLast.limit + optionsLast.apiKey
-        //console.log(url)
+        console.log(url)
         const res = await fetch(url)
         const data = await res.json()
-        pages = data.toptracks["@attr"].totalPages
+        try{
+            pages = data.toptracks["@attr"].totalPages
+        }catch{
+            onStop()
+        }
         let tracks = data.toptracks.track.length
         for (let j = 0; j < tracks; j++) {
             try{
@@ -56,21 +60,31 @@ async function scrape(user, artistOn, albumOn, genreOn, deezerOn){
                 const regex = /\(| \[| ft| FT| Ft| FEAT| feat| Feat/
                 const artist = artistRaw.split(regex)[0]
                 track = trackRaw.split(regex)[0]
-                /*
-                optionsLast.artist = "artist=" + artist.replaceAll(" ", "+") + "&";
-                optionsLast.track = "track=" + trackRaw.replaceAll(" ", "+") + "&";
-                url = optionsLast.api + optionsLast.getInfo + optionsLast.artist + optionsLast.track + optionsLast.apiKey;
-                //console.log(url)
-                const trackRes = await fetch(url)
-                const trackData = await trackRes.json()
-                let album = null;
-                let genres = [];
-                try{album = trackData.track.album.title}catch{}
-                for (let k = 0; k <  5; k++) {
-                    try{genres[k] = trackData.track.toptags.tag[k].name}catch{}
+                
+                if(albumOn){
+                    optionsLast.artist = "artist=" + artist.replaceAll(" ", "+") + "&";
+                    optionsLast.track = "track=" + trackRaw.replaceAll(" ", "+") + "&";
+                    url = optionsLast.api + optionsLast.getInfo + optionsLast.artist + optionsLast.track + optionsLast.apiKey;
+                    let trackRes = await fetch(url)
+                    let trackData = await trackRes.json()
+                    let album = null;
+                    let genres = [];
+                    try{album = trackData.track.album.title}catch{}
+                    for (let k = 0; k <  5; k++) {
+                        try{genres[k] = trackData.track.toptags.tag[k].name}catch{}
+                    }
+                    if(album == null){
+                        optionsLast.track = "track=" + track.split('.')[0].replaceAll(" ", "+") + "&";
+                        url = optionsLast.api + optionsLast.getInfo + optionsLast.artist + optionsLast.track + optionsLast.apiKey;
+                        //console.log(url)
+                        trackRes = await fetch(url)
+                        trackData = await trackRes.json()
+                        try{album = trackData.track.album.title}catch{}
+                    }
+                    
+                    console.log("album:"+album +" genres:" + genres[0] + ", " + genres[1] + ", " +  genres[2] + ", " +  genres[3] + ", " +  genres[4])
                 }
-                */
-                //console.log("album:"+album +" genres:" + genres[0] + ", " + genres[1] + ", " +  genres[2] + ", " +  genres[3] + ", " +  genres[4])
+
                 let duration = data.toptracks.track[j].duration
                 if(duration == 0){
                     if(deezerOn){
@@ -91,7 +105,7 @@ async function scrape(user, artistOn, albumOn, genreOn, deezerOn){
                 }
                 if(!error){ 
                     const durationTotal = duration*playcount
-                    trackMap.set(track, [duration, durationTotal, null])
+                    trackMap.set(track, [null, track, artist, parseInt(durationTotal), parseInt(duration), parseInt(playcount), (i)*200+j+1, perchance(optionsLast.period, durationTotal, 100)]) //rank, track, artist, playtime, length, scrobbles, rankfm, %
                     total += durationTotal
                     post = Date.now()
                     num++
@@ -126,6 +140,7 @@ async function scrape(user, artistOn, albumOn, genreOn, deezerOn){
             }catch{}
         }
     }
+    print(albumMap, genreMap)
     sortTracks(trackMap);
 }
 
