@@ -1,5 +1,5 @@
 .input{
-  width: 60%;
+  width: 50%;
   display:flex;
   border-bottom: 2px solid #dddddd;
   margin:auto;
@@ -19,8 +19,7 @@ body {
 }
 
 .table-container {
-  margin: auto;
-  width: 60%;
+  margin-left: 25%;
 }
 
 * {
@@ -29,11 +28,12 @@ body {
 
 .errors{
   float:right;
-  width:40%
+  width:32%
 }
 
 .content-table {
-  width:60%;
+  border-right: 2px solid #f3f3f3;
+  width:66.7%;
   float:left;
   border-collapse: collapse;
   margin: 25px 0;
@@ -74,7 +74,16 @@ body {
   color: #B90000;
 }
 
-.active-head, .on-head{
+.on-head{
+  color:#B90000;
+  border-bottom: 2px solid #B90000;
+}
+
+.content-table tbody tr:hover{
+  color:#B90000;
+}
+
+.content-table th:hover{
   color:#B90000;
   border-bottom: 2px solid #B90000;
 }

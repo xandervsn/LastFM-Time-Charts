@@ -6,39 +6,19 @@ function addTrack(trackmap){
 		newCell.appendChild(newText);
     }
 	filler.remove()
-	highlight();
-}
-
-function highlight(){
-	let tableRows = document.getElementsByTagName('tr');
-	for (let i = 1; i < tableRows.length; i++) {
-		tableRows[i].onmouseover = function(){
-			tableRows[i].className = 'active-row'
-		}; 
-		tableRows[i].onmouseleave = function(){
-			tableRows[i].className = ''
-		}; 
-	}
 }
 
 const firstrow = document.getElementsByTagName('th');
-for (let i = 0; i < firstrow.length; i++) {
-	firstrow[i].onmouseover = function(){
-		if(firstrow[i].className.split(' ')[0] != 'on-head'){
-			firstrow[i].className = 'active-head'
-		}
-	}; 
-	firstrow[i].onmouseleave = function(){
-		if(firstrow[i].className.split(' ')[0] != 'on-head'){
-			firstrow[i].className = ''
-		}
-	}; 
-}
 
 function sortTableByColumn(table, column, asc = false) {
 	try{document.getElementsByClassName('on-head')[0].className = ''}catch{}
 	firstrow[column].className = 'on-head'
-
+	if(column == 0){
+		column = 3
+	}
+	if(column == 6){
+		column = 5
+	}
 	const dirModifier = asc ? 1 : -1;
 	const tBody = table.tBodies[0];
 	const rows = Array.from(tBody.querySelectorAll("tr"));
@@ -63,19 +43,12 @@ function sortTableByColumn(table, column, asc = false) {
 	table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
 	table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-asc", asc);
 	table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-desc", !asc);
-	highlight();
 }
 
 document.querySelectorAll(".content-table th").forEach(headerCell => {
 	headerCell.addEventListener("click", () => {
 		const tableElement = headerCell.parentElement.parentElement.parentElement;
-		let headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
-		if(headerIndex == 0){
-			headerIndex = 3
-		}
-		if(headerIndex == 6){
-			headerIndex = 5
-		}
+		const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
 		const currentIsAscending = headerCell.classList.contains("th-sort-asc");
 		sortTableByColumn(tableElement, headerIndex, currentIsAscending);
 	});

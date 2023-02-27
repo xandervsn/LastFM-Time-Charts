@@ -5,7 +5,7 @@ const sleep = (milliseconds) => {
 let stopAsked = false;
 let pre = 0;
 
-async function scrape(user, artistOn, albumOn, genreOn, deezerOn){
+async function scrape(user, artistOn, albumOn, genreOn, deezerOn, period){
     stopAsked = false;
     let error = false;
     const trackMap = new Map();
@@ -16,18 +16,20 @@ async function scrape(user, artistOn, albumOn, genreOn, deezerOn){
     let num = 0;
     let indice = 0
 
+    
+    const range = document.getElementById("range")
     const optionsLast = {
         api: "https://ws.audioscrobbler.com/2.0/?format=json&",
         apiKey: "api_key=" + getLastKey().toString(),
         limit: "limit=200&",
         //overall | 7day | 1month | 3month | 6month | 12month 
-        period: "period=overall&",
+        period: `period=${range.options[range.selectedIndex].value}&`,
         getTopTracks: "method=user.gettoptracks&",
         getInfo: "method=track.getInfo&",
         artist: "artist=&",
         track: "track=&",
     };
-    
+
     const optionsDeezer = {
         method: 'GET',
         headers: {
@@ -140,7 +142,6 @@ async function scrape(user, artistOn, albumOn, genreOn, deezerOn){
             }catch{}
         }
     }
-    print(albumMap, genreMap)
     sortTracks(trackMap);
 }
 
