@@ -55,6 +55,10 @@ async function scrape(user, artistOn, albumOn, genreOn, deezerOn, period){
         }
         let tracks = data.toptracks.track.length
         for (let j = 0; j < tracks; j++) {
+            if(stopAsked){
+                i = pages - 1
+                j = tracks - 1
+            }
             try{
                 const playcount = data.toptracks.track[j].playcount;
                 const artistRaw = data.toptracks.track[j].artist.name
@@ -111,9 +115,9 @@ async function scrape(user, artistOn, albumOn, genreOn, deezerOn, period){
                     total += durationTotal
                     post = Date.now()
                     num++
-                    document.getElementById('timeListened').textContent = anal(total)
-                    document.getElementById('trackNumber').textContent = num
-                    document.getElementById('errors').textContent = failCount
+                    document.getElementById('time-listened').textContent = anal(total)
+                    document.getElementById('percent').textContent = perchance(optionsLast.period, total, 100)
+                    document.getElementById('errors-num').textContent = failCount
                     document.getElementById('runtime').textContent = (post-pre)/1000 + " seconds"
                     console.log("Time Listened: " + anal(total) + ", Page: " + page + " out of " + pages)
 
@@ -132,12 +136,8 @@ async function scrape(user, artistOn, albumOn, genreOn, deezerOn, period){
                     }
                 }else{
                     indice++
-                    document.getElementById('errorList').textContent += `${failLog[indice]}\n`
+                    //document.getElementById('errorList').textContent += `${failLog[indice]}\n`
                     error = false;
-                }
-                if(stopAsked){
-                    i = pages - 1
-                    j = tracks - 1
                 }
             }catch{}
         }

@@ -1,6 +1,5 @@
 const userInput = document.getElementById("userInput")
 const stopBtn = document.getElementById("stopBtn")
-const showBtn = document.getElementById('showBtn')
 const errorList = document.getElementById('errorList')
 const content = document.getElementById('content')
 const tstinput = document.getElementById("userInput1")
@@ -18,17 +17,6 @@ btn.onclick = () => {
 
 
 stopBtn.onclick = () => {
+    console.log("working")
     onStop()
-}
-
-showBtn.onclick = function onClick(){
-    if(errorList.style.visibility == "visible"){
-        errorList.style.visibility = "hidden"
-        errorList.style.display = "none"
-        showBtn.textContent = "Show"
-    }else{
-        errorList.style.visibility = "visible"
-        errorList.style.display = "block"
-        showBtn.textContent = "Hide"
-    }
 }
