@@ -12,13 +12,13 @@ const firstrow = document.getElementsByTagName('th');
 
 function sortTableByColumn(table, column, asc = false) {
 	try{document.getElementsByClassName('on-head')[0].className = ''}catch{}
-	firstrow[column].className = 'on-head'
 	if(column == 0){
 		column = 3
 	}
 	if(column == 6){
 		column = 5
 	}
+	firstrow[column].className = 'on-head'
 	const dirModifier = asc ? 1 : -1;
 	const tBody = table.tBodies[0];
 	const rows = Array.from(tBody.querySelectorAll("tr"));
