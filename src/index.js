@@ -2,201 +2,221 @@ const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
-let stopAsked = false;
-let pre = 0;
+const optionsThis = {
+    artist_on: false,
+    album_on: false,
+    genre_on: false,
+    deezer_on: false,
+    stopped: false,
+};
 
-async function scrape(user, artistOn, albumOn, genreOn, deezerOn, period){
-    stopAsked = false;
-    let error = false;
-    const trackMap = new Map();
-    let failLog = [""];
-    let failCount = 0;
-    let total = 0;
-    let post = 0;
-    let num = 0;
-    let indice = 0
+const optionsLast = {
+    api: "https://ws.audioscrobbler.com/2.0/?format=json&",
+    apiKey: "api_key=" + getLastKey().toString(),
+    limit: "limit=200&",
+    //overall | 7day | 1month | 3month | 6month | 12month 
+    period: `period=${range.options[range.selectedIndex].value}&`,
+    getTopTracks: "method=user.gettoptracks&",
+    getInfo: "method=track.getInfo&",
+    artist: "artist=&",
+    track: "track=&",
+    user: "",
+};
 
-    
-    const range = document.getElementById("range")
-    const optionsLast = {
-        api: "https://ws.audioscrobbler.com/2.0/?format=json&",
-        apiKey: "api_key=" + getLastKey().toString(),
-        limit: "limit=200&",
-        //overall | 7day | 1month | 3month | 6month | 12month 
-        period: `period=${range.options[range.selectedIndex].value}&`,
-        getTopTracks: "method=user.gettoptracks&",
-        getInfo: "method=track.getInfo&",
-        artist: "artist=&",
-        track: "track=&",
-    };
+const optionsDeezer = {
+	method: 'GET',
+	headers: {
+		'X-RapidAPI-Key': getDeezerKey(),
+		'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
+	}
+};
 
-    const optionsDeezer = {
-        method: 'GET',
-        headers: {
-            'X-RapidAPI-Key': getDeezerKey(),
-            'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
-        }
-    };
-    
-    let pages = 1
-    const genreMap = new Map();
-    const albumMap = new Map();
-    let track = "Pudgy";
-    for (let i = 0; i < pages; i++) {
-        let page = `page=${i + 1}&`
-        let url = optionsLast.api + user + page + optionsLast.period + optionsLast.getTopTracks + optionsLast.limit + optionsLast.apiKey
-        console.log(url)
-        const res = await fetch(url)
-        const data = await res.json()
-        try{
-            pages = data.toptracks["@attr"].totalPages
-        }catch{
-            onStop()
-        }
-        let tracks = data.toptracks.track.length
+function init(input, artist_on_init, album_on_init, genre_on_init, deezer_on_init){
+    optionsThis.artist_on = artist_on_init;
+    optionsThis.album_on = album_on_init;
+    optionsThis.genre_on = genre_on_init;
+    optionsThis.deezer_on = deezer_on_init;
+    optionsThis.stopped = false;
+    optionsLast.user = input;
+    scrape();
+}
+
+class artist_obj {
+    artist = "";
+    playtime = "";
+};
+
+class album_obj {
+    album = "";
+    artist = "";
+    playtime = "";
+};
+
+class obj {
+    rank = 0;
+    title = "";
+    artist = "";
+    playtime = 0;
+    length = 0;
+    scrobbles = 0;
+    rankfm = 0;
+    percent = 0;
+    album = "";
+    genre = "";
+}
+
+const maps = {
+    errors: new Array(),
+    artists: new Map(),
+    genres: new Map(),
+    albums: new Map(),
+    tracks: new Map()
+}
+
+const arrays = {
+    artists: new Array(),
+    genres: new Array(),
+    albums: new Array(),
+    tracks: new Array()
+}
+
+async function scrape(){
+    let pages = 1;
+    for(let i = 0; i < pages; i++){
+        let page = `page=${i + 1}&`;
+        let url = optionsLast.api + optionsLast.user + page + optionsLast.period + optionsLast.getTopTracks + optionsLast.limit + optionsLast.apiKey;
+        let user_data = await fm_fetch(url);
+        pages = user_data.toptracks["@attr"].totalPages
+        let tracks = user_data.toptracks.track.length
         for (let j = 0; j < tracks; j++) {
-            if(stopAsked){
-                i = pages - 1
-                j = tracks - 1
+            let o = new obj;
+            o.scrobbles = user_data.toptracks.track[j].playcount;
+            o.artist = user_data.toptracks.track[j].artist.name;
+            o.title = user_data.toptracks.track[j].name;
+            const regex = /\(| \[| ft| FT| Ft| FEAT| feat| Feat| Clean/;
+            const artist = o.artist.split(regex)[0].replaceAll(" ", "+");
+            const track = o.title.split(regex)[0].replaceAll(" ", "+");
+            o.length = user_data.toptracks.track[j].duration;
+            o.playtime = user_data.toptracks.track[j].duration * o.scrobbles;
+            o.percent = perchance(optionsLast.period, o.length, 100)
+            o.rankfm = (i) * 200 + j + 1
+
+            let deezer_data = null;
+            if(optionsThis.album_on && optionsThis.deezer_on){
+                deezer_data = await deezer_fetch('https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artist + "+" + track);
             }
-            try{
-                const playcount = data.toptracks.track[j].playcount;
-                const artistRaw = data.toptracks.track[j].artist.name
-                const trackRaw = data.toptracks.track[j].name
-                const regex = /\(| \[| ft| FT| Ft| FEAT| feat| Feat/
-                const artist = artistRaw.split(regex)[0]
-                track = trackRaw.split(regex)[0]
-                
-                if(albumOn){
-                    optionsLast.artist = "artist=" + artist.replaceAll(" ", "+") + "&";
-                    optionsLast.track = "track=" + trackRaw.replaceAll(" ", "+") + "&";
-                    url = optionsLast.api + optionsLast.getInfo + optionsLast.artist + optionsLast.track + optionsLast.apiKey;
-                    let trackRes = await fetch(url)
-                    let trackData = await trackRes.json()
-                    let album = null;
-                    let genres = [];
-                    try{album = trackData.track.album.title}catch{}
-                    for (let k = 0; k <  5; k++) {
-                        try{genres[k] = trackData.track.toptags.tag[k].name}catch{}
-                    }
-                    if(album == null){
-                        optionsLast.track = "track=" + track.split('.')[0].replaceAll(" ", "+") + "&";
-                        url = optionsLast.api + optionsLast.getInfo + optionsLast.artist + optionsLast.track + optionsLast.apiKey;
-                        //console.log(url)
-                        trackRes = await fetch(url)
-                        trackData = await trackRes.json()
-                        try{album = trackData.track.album.title}catch{}
-                    }
-                    
-                    console.log("album:"+album +" genres:" + genres[0] + ", " + genres[1] + ", " +  genres[2] + ", " +  genres[3] + ", " +  genres[4])
-                }
 
-                let duration = data.toptracks.track[j].duration
-                if(duration == 0){
-                    if(deezerOn){
-                        try{
-                            const deezerRes = await fetch('https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artist + " " + track, optionsDeezer)
-                            const deezerData = await deezerRes.json()
-                            duration = deezerData.data[0].duration
-                        }catch{
-                            failLog.push(artist + " - " + track)
-                            failCount += parseInt(playcount);
-                            error = true;
-                        }
-                    }else{
-                        failLog.push(artist + " - " + track)
-                        failCount += parseInt(playcount);
-                        error = true;
-                    }
-                }
-                if(!error){ 
-                    const durationTotal = duration*playcount
-                    trackMap.set(track, [null, track, artist, parseInt(durationTotal), parseInt(duration), parseInt(playcount), (i)*200+j+1, perchance(optionsLast.period, durationTotal, 100)]) //rank, track, artist, playtime, length, scrobbles, rankfm, %
-                    total += durationTotal
-                    post = Date.now()
-                    num++
-                    document.getElementById('time-listened').textContent = anal(total)
-                    document.getElementById('percent').textContent = perchance(optionsLast.period, total, 100)
-                    document.getElementById('errors-num').textContent = failCount
-                    document.getElementById('runtime').textContent = (post-pre)/1000 + " seconds"
-                    console.log("Time Listened: " + anal(total) + ", Page: " + page + " out of " + pages)
-
-
-                    if(albumMap.get(album) == undefined){
-                        albumMap.set(album, durationTotal);
-                    }else{
-                        albumMap.set(album, durationTotal + albumMap.get(album));
-                    }
-                    for (let k = 0; k < genres.length; k++) {
-                        if(genreMap.get(genres[k]) == undefined){
-                            genreMap.set(genres[k], durationTotal);
-                        }else{
-                            genreMap.set(genres[k], durationTotal + genreMap.get(genres[k]));
-                        }
+            if(o.playtime == 0){
+                if(optionsThis.deezer_on){
+                    if(!deezer_data) deezer_data = await deezer_fetch('https://deezerdevs-deezer.p.rapidapi.com/search?q=' + artist + "+" + track);
+                    try{
+                        o.playtime = deezer_data.data[0].duration * o.scrobbles;
+                    }catch{
+                        maps.errors.push(`${o.title} - ${o.scrobbles}`);
                     }
                 }else{
-                    indice++
-                    //document.getElementById('errorList').textContent += `${failLog[indice]}\n`
-                    error = false;
+                    maps.errors.push(`${o.title} - ${o.scrobbles}`);
                 }
-            }catch{}
+            }
+
+            if(optionsThis.genre_on || (optionsThis.album_on)) {
+                optionsLast.artist = "artist=" + artist + "&";
+                optionsLast.track = "track=" + track.split('.')[0].replaceAll(" ", "+") + "&";
+                url = optionsLast.api + optionsLast.getInfo + optionsLast.artist + optionsLast.track + optionsLast.apiKey;
+                const track_data = await fm_fetch(url);
+
+                if(optionsThis.genre_on){
+                    let genre = "";
+                    for (let k = 0; k <  5; k++) {
+                        try{ 
+                            genre = track_data.track.toptags.tag[k].name;
+                            o.genre = genre;
+                            //map_add(genre, o, maps.genres);
+                        }catch{ }
+                    }
+                }
+
+                if(optionsThis.album_on){
+                    let album = false;
+                    if(!optionsThis.deezer_on){
+                        try{ 
+                            album = track_data.track.album.title
+                        }catch{
+                            //console.log(url)
+                        }
+                    }else if(optionsThis.deezer_on){
+                        try{
+                            album = deezer_data.data[0].album.title;
+                        }catch{
+                            //console.log("shit")
+                        }
+                    }
+                    if(album){
+                        o.album = album;
+                        let alb_o = new album_obj;
+                        alb_o.album = o.album;
+                        alb_o.artist = o.artist
+                        let existing_object = maps.albums.get(o.album)
+                        if(existing_object){
+                            alb_o.playtime = o.playtime + existing_object.playtime;
+                        }else{
+                            alb_o.playtime = o.playtime;
+                        }
+                        maps.albums.set(o.album, alb_o)
+                    }
+                    console.log(maps.albums)
+                }
+            }
+
+
+            if(optionsThis.artist_on) {
+                let art_o = new artist_obj;
+                art_o.artist = o.artist;
+                let existing_object = maps.artists.get(o.artist)
+                if(existing_object){
+                    art_o.playtime = o.playtime + existing_object.playtime;
+                }else{
+                    art_o.playtime = o.playtime;
+                }
+                maps.artists.set(o.artist, art_o)
+            }
+
+            maps.tracks.set(o.title, o)
+            if(optionsThis.stopped) break;
         }
     }
-    sortTracks(trackMap);
+
+    mkarr(maps.tracks, arrays.tracks)
+    if(optionsThis.artist_on) mkarr(maps.artists, arrays.artists)
+    if(optionsThis.album_on) mkarr(maps.albums, arrays.albums)
+    if(optionsThis.genre_on) mkarr(maps.genres, arrays.genres);
+
+    console.log("Stopped!")
+    
+    document.getElementById("tracks").className = 'selected';
+	display("tracks");
 }
 
-function onSubmit(user, artistOn, albumOn, genreOn, deezerOn){
-    console.log("hai")
-    pre = Date.now()
-    scrape(user, artistOn, albumOn, genreOn, deezerOn);
+function mkarr(map, array){
+    map.forEach(e => {
+        array.push(e);
+    });
+    array.sort((a, b) => b.playtime - a.playtime);
 }
 
-function onStop() {
-    stopAsked = true;
+async function deezer_fetch(url){
+    const res = await fetch(url, optionsDeezer)
+    const data = await res.json()
+    return data;
 }
 
+async function fm_fetch(url){
+    const res = await fetch(url)
+    const data = await res.json()
+    return data;
+}
 
-/*old code graveyard; inside the mind
-function reset(){
-    stopAsked = false;
-    error = false;
-    listing = {};
-    playList = [];
-    failLog = [""];
-    failCount = 0;
-    total = 0;
-    pre = 0;
-    post = 0;
-    num = 0;
-    indice = 0
-    deezerOn = true;
+function stop(){
+    optionsThis.stopped = true;  
+    console.log("Stopping...")
 }
-function onTrack() {
-    for(var key in listing){
-        playList.push(key)
-    }
-    for (let i = playList.length - 1; i >= 0; i--) {
-        console.log((`${i}: ${listing[playList[i]]} - ${anal(playList[i])} seconds`))
-    }
-}
-function onArtist() {
-    let vari = {};
-    onStop()
-    for(var key in listing){
-        playList.push(key)
-    }
-    for (let i = playList.length - 1; i >= 0; i--) {
-        let artist = listing[playList[i]].split('-')[0]
-        let time = parseInt(playList[i])
-        
-        if(vari[artist] != undefined){
-            vari[artist] = time + vari[artist]
-        }else{
-            vari[artist] = time
-        }
-    }  
-    for(var key in vari){
-        console.log(key + anal(vari[key]))
-    }
-}
-*/

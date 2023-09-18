@@ -7,12 +7,16 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>:3</title>
 </head>
+
+
 <body class="body">
-    <div class="input">
-        <div class="input-section">
-            <input type="search", id='userInput1', placeholder="Last.fm username">
-            <button type="button" id="testbtn">Start</button>
-            <select name ='range' id="range">
+    <div class="settings">
+        <div class = left>
+            <div class="searchbar">
+                <input type="search", id="input", class="search", placeholder="Last.fm username">
+                <button class="icon" id="button">Go!</i>
+            </div>
+            <select class='range' id="range">
                 <option value="7day">Week</option>
                 <option value="1month">Month</option>
                 <option value="3month">3 Month</option>
@@ -20,91 +24,41 @@
                 <option value="12month">Year</option>
                 <option value="overall">Overall</option>
             </select>
-            <button id='stopBtn'>Stop</button>
+            
+            <button class="icon" id="stop">Stop!</button>
+            <div class="checks">
+                <input class="box", type="checkbox", id="artist">Artist</input>
+                <input class="box", type="checkbox", id="album">Album</input>
+                <input class="box", type="checkbox", id="genre">Genre</input>
+                <input class="box", type="checkbox", id="deezer">Deezer</input>
+            </div>
         </div>
-        <div class="input-section">
-            <input type="checkbox", id="artist">Artist</input>
-            <input type="checkbox", id="album">Album</input>
-            <input type="checkbox", id="genre">Genre</input>
-            <input type="checkbox", id="deezer">Deezer</input>
+        <div class="errors">
+            
         </div>
     </div>
-    <div class="table-container">
-        <table class="content-table", id="content-table">
-            <thead>
-              <tr class="first-row", id="first-row">
-                <th>Rank</th>
-                <th>Track</th>
-                <th>Artist</th>
-                <th>Playtime</th>
-                <th>Length</th>
-                <th>Scrobbles</th>
-                <th>RankFM</th>
-                <th>Percent</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr id="filler">
-                <td>1</td>
-                <td>Glue Song</td>
-                <td>beabadoobee</td>
-                <td>19:10</td>
-                <td>4:25</td>
-                <td>4</td>
-                <td>2</td>
-                <td>14%</td>
-              </tr>
-            </tbody>
-          </table>
-          <div id='content'  class='errors-container'>
-            <table id='books', class="stuffs">
+    <div class="right">
+        <div class="table">
+            <table class="content-table", id="content-table">
                 <thead>
-                    <tr>
-                        <th id="time-listened">1</th>
-                    </tr>
-                </thead>
-                <thead>
-                    <tr>
-                        <th id="percent">2</th>
-                    </tr>
-                </thead>
-                <thead>
-                    <tr>
-                        <th id="errors-num">3</th>
-                    </tr>
-                </thead>
-                <thead>
-                    <tr>
-                        <th id="runtime">4</th>
+                    <tr class="first-row", id="first-row">
+                        <th id="tracks">Tracks</th>
+                        <th id="artists">Arists</th>
+                        <th id="albums">Albums</th>
+                        <th id="genres">Genres</th>
                     </tr>
                 </thead>
             </table>
         </div>
-            <table id='books', class="errors">
-                <thead>
-                    <tr>
-                        <th>Time</th>
-                    </tr>
-                </thead>
-                <thead>
-                    <tr>
-                        <th>Percent</th>
-                    </tr>
-                </thead>
-                <thead>
-                    <tr>
-                        <th>Errors</th>
-                    </tr>
-                </thead>
-                <thead>
-                    <tr>
-                        <th>Runtime</th>
-                    </tr>
-                </thead>
-                </table>
+        <div class="real">
+            <table class="content-table", id="real">
+                <tbody id="tbody">
+                </tbody>
+            </table>
         </div>
-    <div class="form", id="form">
+    </div>
 </body>
+
 
 <link rel= stylesheet href= style.css>
 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
