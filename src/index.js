@@ -38,6 +38,7 @@ function init(input, artist_on_init, album_on_init, genre_on_init, deezer_on_ini
     optionsThis.deezer_on = deezer_on_init;
     optionsThis.stopped = false;
     optionsLast.user = input;
+    optionsLast.period = `period=${range.options[range.selectedIndex].value}&`
     scrape();
 }
 
@@ -82,6 +83,8 @@ const arrays = {
 
 async function scrape(){
     let pages = 1;
+    let n = 0;
+    elipses = ""
     for(let i = 0; i < pages; i++){
         let page = `page=${i + 1}&`;
         let url = optionsLast.api + optionsLast.user + page + optionsLast.period + optionsLast.getTopTracks + optionsLast.limit + optionsLast.apiKey;
@@ -123,48 +126,64 @@ async function scrape(){
                 optionsLast.artist = "artist=" + artist + "&";
                 optionsLast.track = "track=" + track.split('.')[0].replaceAll(" ", "+") + "&";
                 url = optionsLast.api + optionsLast.getInfo + optionsLast.artist + optionsLast.track + optionsLast.apiKey;
-                const track_data = await fm_fetch(url);
+                try { 
+                    const track_data = await fm_fetch(url); 
 
-                if(optionsThis.genre_on){
-                    let genre = "";
-                    for (let k = 0; k <  5; k++) {
-                        try{ 
-                            genre = track_data.track.toptags.tag[k].name;
-                            o.genre = genre;
-                            //map_add(genre, o, maps.genres);
-                        }catch{ }
+                    if(optionsThis.genre_on){
+                        let genre = "";
+                        for (let k = 0; k <  5; k++) {
+                            try{ 
+                                genre = track_data.track.toptags.tag[k].name;
+                                o.genre = genre;
+                                if (genre) {
+                                    let gen_o = new obj;
+                                    gen_o.genre = genre;
+                                    let existing_object = maps.genres.get(genre)
+                                    if(existing_object){
+                                        gen_o.playtime = o.playtime + existing_object.playtime;
+                                    }else{
+                                        gen_o.playtime = o.playtime;
+                                    }
+                                    maps.genres.set(genre, gen_o)
+                                }
+                            }catch{ }
+                        }
                     }
-                }
+                    // console.log(maps.genres)
 
-                if(optionsThis.album_on){
-                    let album = false;
-                    if(!optionsThis.deezer_on){
-                        try{ 
-                            album = track_data.track.album.title
-                        }catch{
-                            //console.log(url)
+                    if(optionsThis.album_on){
+                        let album = false;
+                        if(!optionsThis.deezer_on){
+                            try{ 
+                                album = track_data.track.album.title
+                            }catch{
+                                //console.log(url)
+                            }
+                        }else if(optionsThis.deezer_on){
+                            try{
+                                album = deezer_data.data[0].album.title;
+                            }catch{
+                                //console.log("shit")
+                            }
                         }
-                    }else if(optionsThis.deezer_on){
-                        try{
-                            album = deezer_data.data[0].album.title;
-                        }catch{
-                            //console.log("shit")
+
+                        if(album){
+                            o.album = album;
+                            let alb_o = new album_obj;
+                            alb_o.album = o.album;
+                            alb_o.artist = o.artist
+                            let existing_object = maps.albums.get(o.album)
+                            if(existing_object){
+                                alb_o.playtime = o.playtime + existing_object.playtime;
+                            }else{
+                                alb_o.playtime = o.playtime;
+                            }
+                            maps.albums.set(o.album, alb_o)
                         }
+                        // console.log(maps.albums)
                     }
-                    if(album){
-                        o.album = album;
-                        let alb_o = new album_obj;
-                        alb_o.album = o.album;
-                        alb_o.artist = o.artist
-                        let existing_object = maps.albums.get(o.album)
-                        if(existing_object){
-                            alb_o.playtime = o.playtime + existing_object.playtime;
-                        }else{
-                            alb_o.playtime = o.playtime;
-                        }
-                        maps.albums.set(o.album, alb_o)
-                    }
-                    console.log(maps.albums)
+                }catch{
+                    //console.log(url)
                 }
             }
 
@@ -183,7 +202,21 @@ async function scrape(){
 
             maps.tracks.set(o.title, o)
             if(optionsThis.stopped) break;
+
+            n++
+            console.log(n)
+            let appendMin = 100
+            if (optionsThis.artist_on || optionsThis.genre_on) appendMin = 10
+            if (optionsThis.deezer_on) appendMin = 25
+            if (n % appendMin == 0) {
+                elipses += ".";
+                if (elipses.length > 3) {
+                    elipses = "";
+                }
+                tbody.textContent = "Loading" + elipses;
+            }
         }
+        if(optionsThis.stopped) break;
     }
 
     mkarr(maps.tracks, arrays.tracks)
@@ -194,6 +227,7 @@ async function scrape(){
     console.log("Stopped!")
     
     document.getElementById("tracks").className = 'selected';
+    clear();
 	display("tracks");
 }
 

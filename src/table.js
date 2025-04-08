@@ -1,6 +1,5 @@
 const first_row = document.getElementById("first-row")
 const table = document.getElementById("real");
-const tbody = document.getElementById("tbody");
 
 first_row.onclick = () => {
 	for (let i = 0; i < 4; i++) {

@@ -29,14 +29,20 @@ function anal(total){
     const hours = parent.substring(6, 8)
     const days = parent.substring(3, 5) - 1
     const months = parseInt(parent.substring(0, 2)) - 1
-    let lettered;
-    let analog;
-    if(months > 0){
-        lettered = `${months} months, ${days} days, ${hours} hr, ${minutes} min, ${seconds} sec`
+    let lettered = "";
+    let analog = "";
+    if (months > 0) {
+        lettered = `${months} months, ${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`
         analog = `${months}:${days}:${hours}:${minutes}:${seconds}`
-    }else{
-        lettered = `${days} days, ${hours} hr, ${minutes} min, ${seconds} sec`
+    } else if (days > 0) {
+        lettered = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`
         analog = `${days}:${hours}:${minutes}:${seconds}`
+    } else if (hours > 0) {
+        lettered = `${hours} hours, ${minutes} minutes, ${seconds} seconds`
+        analog = `${hours}:${minutes}:${seconds}`
+    } else {
+        lettered = `${minutes} minutes, ${seconds} seconds`
+        analog = `${minutes}:${seconds}`
     }
     return `${lettered}`
 }
